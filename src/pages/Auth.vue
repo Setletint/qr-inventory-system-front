@@ -31,17 +31,17 @@
   </div>
 </template>
 
-
-
 <script lang="ts" setup>
 import { ref, onMounted, watch, nextTick } from 'vue';
+import { useRoute } from 'vue-router'; // Import useRoute to access the route parameters
 import LoginForm from '../components/auth/LoginForm.vue';
 import RegisterForm from '../components/auth/RegisterForm.vue';
 
-const props = defineProps<{ tabRef: string }>();
+const route = useRoute(); // Access the current route
 
+// Check the 'ref' parameter from the URL query
 const tab = ref<'login' | 'register'>(
-  ['login', 'register'].includes(props.tabRef) ? props.tabRef as 'login' | 'register' : 'login'
+  ['login', 'register'].includes(route.query.ref as string) ? (route.query.ref as 'login' | 'register') : 'login'
 );
 
 const loginBtn = ref<HTMLElement | null>(null);
