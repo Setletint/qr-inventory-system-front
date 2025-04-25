@@ -4,7 +4,8 @@ import NavBar from './components/NavBar.vue';
 </script>
 
 <template>
-  <div class="min-h-screen bg-base-100 text-base-content">
+  <div class="min-h-screen bg-base-100 text-base-content mt-0">
+    <NavBar />
     <router-view /> <!-- This renders the page component based on the route -->
   </div>
 </template>
