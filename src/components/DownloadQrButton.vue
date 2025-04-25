@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const props = defineProps<{ imageLink: string }>()
+const props = defineProps<{ imageLink: string }>();
 
 function downloadImage(base64Image: string) {
   const fileName = "my-image.png";
