@@ -1,5 +1,5 @@
 <template>
-    <footer class="footer sm:footer-horizontal bg-neutral text-neutral-content p-10">
+    <footer class="footer sm:footer-horizontal bg-neutral text-neutral-content p-10 bottom-0 mt-auto">
   <aside>
     <h6>QRInventory</h6>
     <p>
