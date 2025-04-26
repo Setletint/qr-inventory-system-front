@@ -36,17 +36,37 @@
 </template>
 
 <script lang="ts" setup>
+import axios from 'axios';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const email = ref<string>('');
 const password = ref<string>('');
 const errorMessage = ref<string>('');
+
+
+const router = useRouter();
 
 const handleLogin = () => {
     if (!email.value || !password.value) {
         errorMessage.value = 'Please enter both email and password.';
         return;
     }
+
+    axios.post('/api/auth/login', {
+        email: email.value,
+        password: password.value
+    })
+    .then(function (res) {
+        sessionStorage.setItem('token', res.data.token);
+        sessionStorage.setItem('userId', res.data.userId);
+        router.push('/dashboard');
+        return;
+    })
+    .catch(function (err) {
+        errorMessage.value = err.response.data.message;
+        return;
+    })
 
     // Add login logic here
     // Example: Call API to authenticate

@@ -33,7 +33,7 @@
                 class="card bg-base-100 w-full max-w-md mx-auto shadow-sm rounded-xl transition-transform hover:scale-105 duration-300">
                 <router-link to="/auth?ref=register">
                     <figure class="">
-                        <img src="/main_page01.png" alt="QR code near plant" />
+                        <img src="/main_page01.png" alt="QR code near plant" class="rounded-t-xl" />
                     </figure>
                     <div class="card-body items-center text-center">
                         <h2 class="card-title text-2xl text-primary">Place QR Codes Anywhere</h2>

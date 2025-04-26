@@ -33,13 +33,12 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, watch, nextTick } from 'vue';
-import { useRoute } from 'vue-router'; // Import useRoute to access the route parameters
+import { useRoute } from 'vue-router';
 import LoginForm from '../components/auth/LoginForm.vue';
 import RegisterForm from '../components/auth/RegisterForm.vue';
 
-const route = useRoute(); // Access the current route
+const route = useRoute();
 
-// Check the 'ref' parameter from the URL query
 const tab = ref<'login' | 'register'>(
   ['login', 'register'].includes(route.query.ref as string) ? (route.query.ref as 'login' | 'register') : 'login'
 );

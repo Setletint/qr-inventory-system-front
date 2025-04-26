@@ -51,6 +51,9 @@
 // Testing purpose
 export default {
     data() {
+        if ( sessionStorage.getItem('token') && sessionStorage.getItem('userId')) {
+            return { isAuthenticated: true}
+        }
         return {
             isAuthenticated: false
         };
