@@ -11,6 +11,7 @@ const routes = [
   { path: '/dashboard', component: Dashboard },
   { path: '/settings', component: Settings },
   { path: '/item/:id', component: ItemDetail, props: true },
+  { path: '/:pathMatch(.*)', component: Home}
 ];
 
 const router = createRouter({
