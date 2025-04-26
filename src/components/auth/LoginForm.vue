@@ -67,12 +67,5 @@ const handleLogin = () => {
         errorMessage.value = err.response.data.message;
         return;
     })
-
-    // Add login logic here
-    // Example: Call API to authenticate
-    console.log('Logging in with', email.value, password.value);
-
-    // If login fails, show an error message
-    // errorMessage.value = 'Invalid email or password';
 };
 </script>

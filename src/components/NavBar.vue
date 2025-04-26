@@ -32,7 +32,7 @@
                         <router-link to="/settings">Settings</router-link>
                     </li>
                     <li>
-                        <button>Logout</button>
+                        <button @click="logout">Logout</button>
                     </li>
                 </ul>
             </div>
@@ -48,15 +48,32 @@
 
 
 <script lang="ts">
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+
 // Testing purpose
 export default {
     data() {
-        if ( sessionStorage.getItem('token') && sessionStorage.getItem('userId')) {
-            return { isAuthenticated: true}
-        }
         return {
-            isAuthenticated: false
+            router: useRouter(),
         };
+    },
+    computed: {
+        isAuthenticated(): boolean {
+            return !!(sessionStorage.getItem('token') && sessionStorage.getItem('userId'));
+        }
+    },
+    methods: {
+        async logout(){
+            axios.post('/api/auth/logout', {
+                userId: sessionStorage.getItem('userId'),
+                token: sessionStorage.getItem('token')
+            })
+            sessionStorage.clear();
+            await this.router.push('/');
+            this.router.go(0);
+            return;
+        }
     }
 };
 </script>

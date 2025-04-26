@@ -11,8 +11,16 @@
                 <input type="email" id="email" v-model="email" required placeholder="Enter your email"
                     class="input input-bordered w-full" />
             </div>
+            <!-- Username Field -->
+            <div class="form-control">
+                <label for="username" class="label">
+                    <span class="label-text text-gray-600">Username</span>
+                </label>
+                <input type="text" id="username" v-model="username" required placeholder="Enter your desired username"
+                    class="input input-bordered w-full" />
+            </div>
 
-            <!-- Password Field -->
+            <!-- Password Fields -->
             <div class="form-control">
                 <label for="password" class="label">
                     <span class="label-text text-gray-600">Password</span>
@@ -24,8 +32,8 @@
                 <label for="password-controll" class="label">
                     <span class="label-text text-gray-600">Confirm Password</span>
                 </label>
-                <input type="password" id="password-controll" v-model="passwordControll" required placeholder="Confirm your password"
-                    class="input input-bordered w-full" />
+                <input type="password" id="password-controll" v-model="passwordControll" required
+                    placeholder="Confirm your password" class="input input-bordered w-full" />
             </div>
 
             <!-- Error Message -->
@@ -43,12 +51,17 @@
 </template>
 
 <script lang="ts" setup>
+import axios from 'axios';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const email = ref<string>('');
+const username = ref<string>('');
 const password = ref<string>('');
 const passwordControll = ref<string>('');
 const errorMessage = ref<string>('');
+
+const router = useRouter();
 
 const handleRegister = () => {
     if (!email.value || !password.value || !passwordControll.value) {
@@ -56,11 +69,37 @@ const handleRegister = () => {
         return;
     }
 
-    // Add login logic here
-    // Example: Call API to authenticate
-    console.log('Logging in with', email.value, password.value);
+    if (password.value != passwordControll.value) {
+        errorMessage.value = 'Passwords aren\t identical.';
+        return;
+    }
 
-    // If login fails, show an error message
-    // errorMessage.value = 'Invalid email or password';
+    axios.post('/api/user/register', {
+        email: email.value,
+        username: username.value,
+        password: password.value
+    })
+        .then(function () {
+            axios.post('/api/auth/login', {
+                email: email.value,
+                password: password.value
+            })
+                .then(function (res) {
+                    sessionStorage.setItem('token', res.data.token);
+                    sessionStorage.setItem('userId', res.data.userId);
+                    router.push('/dashboard');
+                    return;
+                })
+                .catch(function (err) {
+                    errorMessage.value = err.response.data.message;
+                    return;
+                })
+            router.push('/dashboard');
+            return;
+        })
+        .catch(function (err) {
+            errorMessage.value = err.response.data.message;
+            return;
+        });
 };
 </script>

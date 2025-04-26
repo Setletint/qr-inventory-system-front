@@ -4,7 +4,6 @@ import App from './App.vue'
 import router from './router';
 import axios from 'axios';
 
-console.log('API URL:', import.meta.env.VITE_API_URL);
 axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5173';
 
 const app = createApp(App);
