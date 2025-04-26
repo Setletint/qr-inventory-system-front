@@ -10,7 +10,7 @@
   </aside>
   <nav>
     <h6 class="footer-title">Links</h6>
-    <a href="https://github.com/Setletint" class="link link-hover">GitHub</a>
+    <a href="https://github.com/Setletint" target="_blank" class="link link-hover">GitHub</a>
   </nav>
 </footer>
 </template>

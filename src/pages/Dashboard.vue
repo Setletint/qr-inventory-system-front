@@ -32,8 +32,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const searchQuery = ref('');
 
 interface Item {
@@ -52,8 +54,9 @@ const filteredItems = computed(() =>
     items.filter(item => item.name.toLowerCase().includes(searchQuery.value.toLowerCase()))
 );
 
+onMounted(() => {
+    if (!sessionStorage.getItem('token') ) {
+        router.push('/auth');
+    }
+});
 </script>
-
-<style scoped>
-/* Tailwind + DaisyUI стили уже достаточно хорошие */
-</style>
