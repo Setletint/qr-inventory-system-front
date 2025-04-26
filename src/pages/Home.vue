@@ -6,10 +6,12 @@
                 Welcome to <span class="text-primary">QR Inventory</span>
             </h1>
             <p class="text-xl md:text-lg text-gray-500 max-w-2xl mx-auto">
-                Our app is a modern solution for inventory tracking that allows organizations to create their own profiles and manage any kind of items — from simple colored markers to specialized equipment. Each item can have a unique record with a generated QR code for quick access and updates.
+                Our app is a modern solution for inventory tracking that allows organizations to create their own
+                profiles and manage any kind of items — from simple colored markers to specialized equipment. Each item
+                can have a unique record with a generated QR code for quick access and updates.
             </p>
             <div class="flex justify-center gap-4">
-                <a href="/auth?ref=register"><button class="btn btn-primary">Get Started</button></a>
+                <router-link to="/auth?ref=register"><button class="btn btn-primary">Get Started</button></router-link>
                 <button class="btn btn-outline">Learn More</button>
             </div>
         </section>
@@ -29,16 +31,18 @@
             <!-- Image Card -->
             <div
                 class="card bg-base-100 w-full max-w-md mx-auto shadow-sm rounded-xl transition-transform hover:scale-105 duration-300">
-                <figure class="">
-                    <img src="/main_page01.png" alt="QR code near plant" />
-                </figure>
-                <div class="card-body items-center text-center">
-                    <h2 class="card-title text-2xl text-primary">Place QR Codes Anywhere</h2>
-                    <p class="text-gray-600">
-                        Generate and print QR codes you can place on walls, desks, or any surface—bringing your data
-                        just a scan away.
-                    </p>
-                </div>
+                <router-link to="/auth?ref=register">
+                    <figure class="">
+                        <img src="/main_page01.png" alt="QR code near plant" />
+                    </figure>
+                    <div class="card-body items-center text-center">
+                        <h2 class="card-title text-2xl text-primary">Place QR Codes Anywhere</h2>
+                        <p class="text-gray-600">
+                            Generate and print QR codes you can place on walls, desks, or any surface—bringing your data
+                            just a scan away.
+                        </p>
+                    </div>
+                </router-link>
             </div>
         </section>
 

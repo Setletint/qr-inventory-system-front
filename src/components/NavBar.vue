@@ -15,12 +15,12 @@
         <!-- Right side -->
         <div class="ml-auto flex-none">
 
-            <div v-if="isAuthenticated" class="dropdown dropdown-end">
-                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-                    <div class="w-10 rounded-full">
-                        <span class="text-xl text-green-500 leading-9">+</span>
-                    </div>
+            <div v-if="isAuthenticated" tabindex="0" role="button" class="btn btn-ghost btn-circle avatar mr-2">
+                <div class="w-10 rounded-full">
+                    <span class="text-xl text-green-500 leading-9">+</span>
                 </div>
+            </div>
+            <div v-if="isAuthenticated" class="dropdown dropdown-end">
                 <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
                     <div class="w-10 rounded-full">
                         <img src="https://i.pravatar.cc/100?img=3" alt="User Avatar" />
@@ -38,8 +38,8 @@
             </div>
 
             <div v-else class="flex gap-2">
-                <router-link to="/login" class="btn btn-outline btn-sm">Login</router-link>
-                <router-link to="/register" class="btn btn-primary btn-sm">Register</router-link>
+                <router-link to="/auth" class="btn btn-outline btn-sm">Login</router-link>
+                <router-link to="/auth?ref=register" class="btn btn-primary btn-sm">Register</router-link>
             </div>
 
         </div>
@@ -52,7 +52,7 @@
 export default {
     data() {
         return {
-            isAuthenticated: true
+            isAuthenticated: false
         };
     }
 };
