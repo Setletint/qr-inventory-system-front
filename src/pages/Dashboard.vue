@@ -10,7 +10,10 @@
             <input v-model="searchQuery" type="text" placeholder="Search items..."
                 class="input input-bordered w-full max-w-xs" />
         </div>
-        <div class="overflow-x-auto">
+
+        <div v-if="loading" class="text-center">Loading...</div>
+
+        <div v-else class="overflow-x-auto">
             <table class="table table-zebra w-full">
                 <thead>
                     <tr>
@@ -18,45 +21,55 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in filteredItems" :key="item.id">
-                        <td>{{ item.name }}</td>
+                    <tr v-for="item in filteredItems" :key="item._id">
+                        <router-link :to="`/item/${item._id}`">
+                            <td>{{ item.name }}</td>
+                        </router-link>
                     </tr>
                 </tbody>
             </table>
         </div>
+
         <div class="text-sm text-gray-500 mb-2 mt-2">
             Total Items: {{ items.length }}
         </div>
-
     </div>
 </template>
 
 <script lang="ts" setup>
+import axios from 'axios';
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const searchQuery = ref('');
 
+const items = ref<Item[]>([]);
+const loading = ref(true);
+
 interface Item {
-    id: string;
+    _id: string;
     name: string;
 }
 
-const items: Item[] = [
-    { id: '1', name: 'Маркер Красный' },
-    { id: '2', name: 'Маркер Синий' },
-    { id: '3', name: 'Маркер Зелёный' },
-    { id: '4', name: 'Спрей Белый' },
-];
-
-const filteredItems = computed(() =>
-    items.filter(item => item.name.toLowerCase().includes(searchQuery.value.toLowerCase()))
-);
-
 onMounted(() => {
-    if (!sessionStorage.getItem('token') ) {
+    if (!sessionStorage.getItem('token')) {
         router.push('/auth');
+    } else {
+        axios.post('/api/item/getItems', {
+            userId: sessionStorage.getItem('userId'),
+            token: sessionStorage.getItem('token'),
+        })
+            .then(function (res) {
+                items.value = res.data.items;
+            })
+            .finally(() => {
+                loading.value = false;
+            });
     }
 });
+
+const filteredItems = computed(() =>
+    items.value.filter(item => item.name.toLowerCase().includes(searchQuery.value.toLowerCase()))
+);
 </script>
