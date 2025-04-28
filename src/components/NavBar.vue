@@ -3,7 +3,7 @@
         <!-- Left side -->
         <div class="flex items-center space-x-4">
 
-            <router-link to="/" class="text-2xl font-semibold text-primary">InventoryApp</router-link>
+            <router-link to="/" class="text-2xl font-semibold text-primary">QR Inventory</router-link>
 
             <div class="flex space-x-4">
                 <router-link to="/" class="btn btn-ghost btn-sm text-base">Home</router-link>

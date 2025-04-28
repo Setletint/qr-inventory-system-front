@@ -2,7 +2,6 @@
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 
-import QrButton from './components/DownloadQrButton.vue'
 import NavBar from './components/NavBar.vue';
 import Footer from './components/Footer.vue';
 

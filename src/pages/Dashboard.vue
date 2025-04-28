@@ -22,7 +22,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="item in filteredItems" :key="item._id">
-                        <router-link :to="`/item/${item._id}`">
+                        <router-link class="min-w-full" :to="`/item/${item._id}`" style="display: block; width: 100%;">
                             <td>{{ item.name }}</td>
                         </router-link>
                     </tr>

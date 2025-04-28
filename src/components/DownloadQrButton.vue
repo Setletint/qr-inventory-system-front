@@ -1,9 +1,21 @@
+<template>
+  <button class="btn btn-primary gap-2" @click="handleButtonClick">
+    <img src="../assets/qrcode-white.svg" width="40">
+  </button>
+</template>
+
 <script setup lang="ts">
-const props = defineProps<{ imageLink: string }>();
+import axios from 'axios';
+import { ref } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const id = route.params.id as string;
+
+const fetchedImageLink = ref<string | null>(null);
 
 function downloadImage(base64Image: string) {
   const fileName = "my-image.png";
-
   const link = document.createElement("a");
   link.href = base64Image;
   link.download = fileName;
@@ -12,18 +24,23 @@ function downloadImage(base64Image: string) {
   document.body.removeChild(link);
 }
 
-</script>
+async function fetchImageLink() {
+  try {
+    const response = await axios.get(`/api/item/getQrCode/${id}`);
+    fetchedImageLink.value = response.data.qrCode;
+    if (fetchedImageLink.value) {
+      downloadImage(fetchedImageLink.value);
+    }
+  } catch (error) {
+    console.error('Error fetching image:', error);
+  }
+}
 
-<template>
-  <button
-    class="btn btn-primary gap-2"
-    @click="downloadImage(props.imageLink)"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-      viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-        d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
-    </svg>
-    Download QR Code
-  </button>
-</template>
+function handleButtonClick() {
+  if (!fetchedImageLink.value) {
+    fetchImageLink();
+  } else {
+    downloadImage(fetchedImageLink.value);
+  }
+}
+</script>

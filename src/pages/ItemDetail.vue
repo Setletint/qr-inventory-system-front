@@ -1,22 +1,26 @@
 <template>
-    <div class="pt-20 sm:pt-30 px-6 md:px-16 lg:px-32 bg-base-100 text-base-content min-h-screen">
+    <div class="pt-20 sm:pt-30 px-6 md:px-16 lg:px-32 bg-base-100 text-base-content min-h-screen mb-40">
         <div v-if="loading" class="text-center">Loading...</div>
 
         <div v-else-if="item" class="max-w-2xl mx-auto space-y-8">
             <div class="flex items-center justify-between">
                 <h1 class="text-3xl font-bold">{{ isEditing ? 'Edit Item' : item.name }}</h1>
-                <button v-if="isOwner && !isEditing" class="btn btn-primary" @click="isEditing = true">
-                    Edit
-                </button>
+                <div class="flex flex-col ml-auto space-y-2"> <!-- This container will align the buttons vertically -->
+                    <QrButton />
+                    <button v-if="isOwner && !isEditing" class="btn btn-primary" @click="isEditing = true">
+                        Edit
+                    </button>
+                </div>
             </div>
 
             <!-- View Mode -->
             <div v-if="!isEditing" class="space-y-4">
+                <!-- Visibility (disabled for now)
                 <div class="text-lg" v-if="isOwner">
                     <span class="font-semibold">Visibility:</span>
                     <span>{{ item.isPrivate ? 'Private' : 'Public' }}</span>
                 </div>
-
+                 -->
                 <div class="space-y-4">
                     <div v-for="(block, index) in item.content" :key="index" class="space-y-4">
                         <h2 class="text-2xl font-semibold">{{ block.header }}</h2>
@@ -80,6 +84,8 @@
 
 
 <script lang="ts" setup>
+import QrButton from '../components/DownloadQrButton.vue';
+
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
