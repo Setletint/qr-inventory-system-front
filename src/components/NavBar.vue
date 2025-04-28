@@ -1,14 +1,11 @@
 <template>
-    <nav class="navbar px-4 fixed top-0 left-0 right-0 z-10 pt-0 bg-base-100/95">
+    <nav :class="['navbar px-4 bg-base-100/95', isFixed ? 'fixed top-0 left-0 right-0 z-10 pt-0' : 'mb-2']">
         <!-- Left side -->
         <div class="flex items-center space-x-4">
-
             <router-link to="/" class="text-2xl font-semibold text-primary">QR Inventory</router-link>
-
             <div class="flex space-x-4">
                 <router-link to="/" class="btn btn-ghost btn-sm text-base">Home</router-link>
-                <router-link to="/dashboard" class="btn btn-ghost btn-sm text-base"
-                    v-if="isAuthenticated">Dashboard</router-link>
+                <router-link to="/dashboard" class="btn btn-ghost btn-sm text-base" v-if="isAuthenticated">Dashboard</router-link>
             </div>
         </div>
 
@@ -20,8 +17,7 @@
                         <img src="https://i.pravatar.cc/100?img=3" alt="User Avatar" />
                     </div>
                 </div>
-                <ul tabindex="0"
-                    class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-64">
+                <ul tabindex="0" class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-64">
                     <li>
                         <router-link class="text-2xl md:text-lg" to="/settings">Settings</router-link>
                     </li>
@@ -35,17 +31,21 @@
                 <router-link to="/auth" class="btn btn-outline btn-sm">Login</router-link>
                 <router-link to="/auth?ref=register" class="btn btn-primary btn-sm">Register</router-link>
             </div>
-
         </div>
     </nav>
 </template>
-
 
 <script lang="ts">
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 
 export default {
+    props: {
+        isFixed: {
+            type: Boolean,
+            default: true,
+        },
+    },
     data() {
         return {
             router: useRouter(),
@@ -57,7 +57,7 @@ export default {
         }
     },
     methods: {
-        async logout(){
+        async logout() {
             axios.post('/api/auth/logout', {
                 userId: sessionStorage.getItem('userId'),
                 token: sessionStorage.getItem('token')

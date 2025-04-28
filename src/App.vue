@@ -7,16 +7,20 @@ import Footer from './components/Footer.vue';
 
 const route = useRoute()
 
-const hiddenNavbarPaths = ['/auth']
+const hiddenNavbarPaths = ['/auth', '/item/:id']
 
 const showNavbar = computed(() => {
-  return !hiddenNavbarPaths.includes(route.path)
+  return !hiddenNavbarPaths.some(path => route.path.startsWith(path))
+})
+
+const isNavbarFixed = computed(() => {
+  return !route.path.startsWith('/item/')
 })
 </script>
 
 <template>
   <div class="min-h-screen bg-base-100 text-base-content mt-0">
-    <NavBar v-if="showNavbar" />
+    <NavBar v-if="showNavbar" :isFixed="isNavbarFixed" />
     <router-view />
     <Footer v-if="showNavbar" />
   </div>

@@ -1,5 +1,5 @@
 <template>
-    <div class="pt-20 sm:pt-30 px-6 md:px-16 lg:px-32 bg-base-100 text-base-content min-h-screen mb-40">
+    <div class="pt-6 sm:pt-10 px-6 md:px-16 lg:px-32 bg-base-100 text-base-content min-h-screen mb-40">
         <div v-if="loading" class="text-center">Loading...</div>
 
         <div v-else-if="item" class="max-w-2xl mx-auto space-y-8">
