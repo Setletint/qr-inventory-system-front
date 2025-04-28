@@ -41,7 +41,8 @@
                     <label class="label">
                         <span class="label-text">Name</span>
                     </label>
-                    <input v-model="newItemName" type="text" placeholder="Item name" class="input input-bordered ml-2" />
+                    <input v-model="newItemName" type="text" placeholder="Item name"
+                        class="input input-bordered ml-2" />
                 </div>
                 <div class="form-control mb-4">
                     <label class="label cursor-pointer">
@@ -91,12 +92,12 @@ const fetchItems = () => {
         userId: sessionStorage.getItem('userId'),
         token: sessionStorage.getItem('token'),
     })
-    .then(function (res) {
-        items.value = res.data.items;
-    })
-    .finally(() => {
-        loading.value = false;
-    });
+        .then(function (res) {
+            items.value = res.data.items;
+        })
+        .finally(() => {
+            loading.value = false;
+        });
 };
 
 const filteredItems = computed(() =>
@@ -115,15 +116,15 @@ const createItem = () => {
         name: newItemName.value,
         isPrivate: isPrivate.value
     })
-    .then(() => {
-        showModal.value = false;
-        newItemName.value = '';
-        isPrivate.value = false;
-        fetchItems();
-    })
-    .catch(err => {
-        console.error(err);
-        alert('Failed to create item.');
-    });
+        .then(() => {
+            showModal.value = false;
+            newItemName.value = '';
+            isPrivate.value = false;
+            fetchItems();
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Failed to create item.');
+        });
 };
 </script>
