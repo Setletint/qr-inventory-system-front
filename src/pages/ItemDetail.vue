@@ -44,6 +44,22 @@
                         <input type="checkbox" v-model="editPrivate" class="checkbox checkbox-primary" />
                     </label>
                 </div>
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Authorized Users (comma-separated emails)</span>
+                    </label>
+                    <textarea v-model="authorizedUsersInput" class="textarea textarea-bordered w-full"
+                        rows="2"></textarea>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Authorized Calendar Users (comma-separated emails)</span>
+                    </label>
+                    <textarea v-model="authorizedCalendarUsersInput" class="textarea textarea-bordered w-full"
+                        rows="2"></textarea>
+                </div>
+
 
                 <div class="space-y-4">
                     <h2 class="text-xl font-bold">Content Blocks</h2>
@@ -81,8 +97,6 @@
     </div>
 </template>
 
-
-
 <script lang="ts" setup>
 import QrButton from '../components/DownloadQrButton.vue';
 
@@ -103,6 +117,9 @@ const messageType = ref<'success' | 'error'>('success');
 const editName = ref('');
 const editPrivate = ref(false);
 const editContent = ref<any[]>([]);
+
+const authorizedUsersInput = ref('');
+const authorizedCalendarUsersInput = ref('');
 
 onMounted(() => {
     if (!sessionStorage.getItem('token')) {
@@ -139,6 +156,23 @@ const fetchItem = async () => {
     }
 };
 
+const sendAuthorizedUsers = async (emails: string, forCalendar: boolean) => {
+    const emailArray = emails.split(',').map(email => email.trim()).filter(email => email !== '');
+
+    if (emailArray.length === 0) return;
+
+    try {
+        await axios.post(`/api/item/setAuthorizedUsers/${route.params.id}`, {
+            userId: sessionStorage.getItem('userId'),
+            token: sessionStorage.getItem('token'),
+            forCalender: forCalendar,
+            authorizedUsers: emailArray,
+        });
+    } catch (error) {
+        console.error(`Failed to set ${forCalendar ? 'calendar' : 'regular'} authorized users`, error);
+    }
+};
+
 const saveChanges = async () => {
     if (!editName.value.trim()) {
         alert('Name is required.');
@@ -159,10 +193,12 @@ const saveChanges = async () => {
             item.value.isPrivate = editPrivate.value;
             item.value.content = [...editContent.value];
 
+            await sendAuthorizedUsers(authorizedUsersInput.value, false);
+            await sendAuthorizedUsers(authorizedCalendarUsersInput.value, true);
+
             isEditing.value = false;
             showMessage.value = 'Item saved successfully!';
             messageType.value = 'success';
-
         } else {
             showMessage.value = 'Failed to save changes. Please try again.';
             messageType.value = 'error';
@@ -188,5 +224,4 @@ const addTextBlock = () => {
 const removeBlock = (index: number) => {
     editContent.value.splice(index, 1);
 };
-
 </script>
