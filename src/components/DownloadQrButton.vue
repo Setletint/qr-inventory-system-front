@@ -15,7 +15,7 @@ const id = route.params.id as string;
 const fetchedImageLink = ref<string | null>(null);
 
 function downloadImage(base64Image: string) {
-  const fileName = "my-image.png";
+  const fileName = "qrCode.png";
   const link = document.createElement("a");
   link.href = base64Image;
   link.download = fileName;
