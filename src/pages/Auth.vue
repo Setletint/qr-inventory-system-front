@@ -33,11 +33,18 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, watch, nextTick } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import LoginForm from '../components/auth/LoginForm.vue';
 import RegisterForm from '../components/auth/RegisterForm.vue';
 
 const route = useRoute();
+const router = useRouter();
+
+onMounted(() => {
+    if (sessionStorage.getItem('token')) {
+        router.push('/dashboard');
+    }
+});
 
 const tab = ref<'login' | 'register'>(
   ['login', 'register'].includes(route.query.ref as string) ? (route.query.ref as 'login' | 'register') : 'login'
