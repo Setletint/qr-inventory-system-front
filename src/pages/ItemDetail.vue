@@ -6,8 +6,16 @@
             <div class="flex items-center justify-between">
                 <h1 class="text-3xl font-bold">{{ isEditing ? 'Edit Item' : item.name }}</h1>
                 <div class="flex flex-col ml-auto space-y-2">
-                    <QrButton />
-                    <button v-if="isOwner && !isEditing" class="btn btn-primary" @click="isEditing = true">Edit</button>
+                    <QrButton v-if="!isEditing" />
+                    <RouterLink v-if="!isEditing" :to="`/item/calendar/${item._id}`"
+                        class="btn btn-primapy flex items-center gap-2 bg-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="white" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0
+                00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                    </RouterLink>
+                    <button v-if="isOwner && !isEditing" class="btn btn-primary" @click="isEditing = true"><img src="../assets/pencil-white.svg" width="20"></button>
                 </div>
             </div>
 
@@ -142,7 +150,7 @@ const fetchItem = async () => {
         editName.value = item.value.name;
         editPrivate.value = item.value.isPrivate;
         editContent.value = Array.isArray(item.value.content) ? [...item.value.content] : [];
-        
+
         // Debugging the values here
         console.log('Authorized Users:', item.value.authorizedUsers);
         console.log('Authorized Calendar Users:', item.value.authorizedCalendarUsers);
