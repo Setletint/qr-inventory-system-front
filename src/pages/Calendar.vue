@@ -1,15 +1,22 @@
 <template>
     <div class="p-6 min-h-screen bg-base-100 text-base-content">
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-2xl font-bold">Calendar</h1>
+            <button @click="showCreateModal = true"
+                class="px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark">
+                + Create Event
+            </button>
+        </div>
+
         <div v-if="loading" class="text-center">Loading calendar...</div>
 
         <div v-else-if="!events.length" class="text-center text-gray-500">
             No events found for this item.
         </div>
 
-        <FullCalendar v-else :options="calendarOptions" class="bg-base-600 border-2 rounded-lg shadow-xl p-4" />
+        <FullCalendar v-else :options="calendarOptions" class="bg-base-600 border-2 rounded-lg shadow-xl p-4 pb-8" />
 
-
-        <!-- Modal -->
+        <!-- View Event Modal -->
         <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center">
             <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
                 <h2 class="text-xl font-bold mb-2">{{ selectedEvent.title }}</h2>
@@ -21,6 +28,34 @@
                 <div class="mt-4 text-right">
                     <button @click="closeModal" class="px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark">
                         Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Event Modal -->
+        <div v-if="showCreateModal" class="fixed inset-0 z-50 flex items-center justify-center">
+            <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
+                <h2 class="text-xl font-bold mb-4">Create New Event</h2>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium">Title</label>
+                    <input v-model="newEvent.title" class="w-full p-2 border rounded mt-1" type="text" />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium">Description</label>
+                    <textarea v-model="newEvent.description" class="w-full p-2 border rounded mt-1" rows="3"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium">Date & Time</label>
+                    <input v-model="newEvent.time" class="w-full p-2 border rounded mt-1" type="datetime-local" />
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button @click="showCreateModal = false" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+                        Cancel
+                    </button>
+                    <button @click="submitNewEvent"
+                        class="px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark">
+                        Save
                     </button>
                 </div>
             </div>
@@ -44,7 +79,13 @@ const events = ref<EventInput[]>([]);
 const loading = ref(true);
 
 const showModal = ref(false);
+const showCreateModal = ref(false);
 const selectedEvent = ref<any>({});
+const newEvent = ref({
+    title: '',
+    description: '',
+    time: '',
+});
 
 const openModal = (event: any) => {
     selectedEvent.value = {
@@ -58,6 +99,38 @@ const openModal = (event: any) => {
 
 const closeModal = () => {
     showModal.value = false;
+};
+
+const submitNewEvent = async () => {
+    if (!newEvent.value.title || !newEvent.value.time) return;
+
+    const start = new Date(newEvent.value.time);
+    const end = new Date(start.getTime() + 60 * 60 * 1000);
+
+    const itemId = route.params.id;
+    const userId = sessionStorage.getItem('userId');
+    const token = sessionStorage.getItem('token');
+
+    await axios.post(`/api/item/calendar/${itemId}`, {
+        userId,
+        token,
+        event: {
+                title: newEvent.value.title,
+                description: newEvent.value.description,
+                time: newEvent.value.time,
+        }
+    });
+
+    events.value.push({
+        id: Date.now().toString(),
+        title: newEvent.value.title,
+        description: newEvent.value.description,
+        start: start.toISOString(),
+        end: end.toISOString(),
+    });
+
+    newEvent.value = { title: '', description: '', time: '' };
+    showCreateModal.value = false;
 };
 
 const calendarOptions = ref({

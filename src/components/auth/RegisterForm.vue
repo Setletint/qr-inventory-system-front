@@ -80,7 +80,7 @@ const handleRegister = () => {
         password: password.value
     })
         .then(function () {
-            axios.post('/api/auth/login', {
+            axios.post(`/api/auth/login`, {
                 email: email.value,
                 password: password.value
             })

@@ -53,7 +53,7 @@ const handleLogin = () => {
         return;
     }
 
-    axios.post('/api/auth/login', {
+    axios.post(`/api/auth/login`, {
         email: email.value,
         password: password.value
     })
