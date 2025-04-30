@@ -115,6 +115,12 @@ const closeModal = () => {
 };
 
 const deleteEvent = async () => {
+    const isConfirmed = confirm('Are you sure you want to delete this event? This action cannot be undone.');
+
+    if (!isConfirmed) {
+        return;
+    }
+
     const itemId = route.params.id;
     const userId = sessionStorage.getItem('userId');
     const token = sessionStorage.getItem('token');
@@ -131,6 +137,7 @@ const deleteEvent = async () => {
         alert('Failed to delete event.');
     }
 };
+
 
 const submitNewEvent = async () => {
     if (!newEvent.value.title || !newEvent.value.time) return;
