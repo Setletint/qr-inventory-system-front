@@ -1,5 +1,8 @@
 <template>
     <div class="p-6 min-h-screen bg-base-100 text-base-content">
+        <button @click="goBack" class="px-4 py-2 mb-6 btn btn-primary">
+            ← Back
+        </button>
         <div class="flex justify-between items-center mb-4">
             <h1 class="text-2xl font-bold">Calendar</h1>
             <button @click="showCreateModal = true"
@@ -7,6 +10,7 @@
                 + Create Event
             </button>
         </div>
+
 
         <div v-if="loading" class="text-center">Loading calendar...</div>
 
@@ -101,6 +105,11 @@ const closeModal = () => {
     showModal.value = false;
 };
 
+const goBack = () => {
+    const itemId = route.params.id;
+    router.push(`/item/${itemId}`);
+};
+
 const submitNewEvent = async () => {
     if (!newEvent.value.title || !newEvent.value.time) return;
 
@@ -115,9 +124,9 @@ const submitNewEvent = async () => {
         userId,
         token,
         event: {
-                title: newEvent.value.title,
-                description: newEvent.value.description,
-                time: newEvent.value.time,
+            title: newEvent.value.title,
+            description: newEvent.value.description,
+            time: newEvent.value.time,
         }
     });
 
