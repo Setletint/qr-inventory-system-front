@@ -3,6 +3,7 @@
         <button @click="goBack" class="px-4 py-2 mb-6 btn btn-primary">
             ← Back
         </button>
+
         <div class="flex justify-between items-center mb-4">
             <h1 class="text-2xl font-bold">Calendar</h1>
             <button @click="showCreateModal = true"
@@ -10,7 +11,6 @@
                 + Create Event
             </button>
         </div>
-
 
         <div v-if="loading" class="text-center">Loading calendar...</div>
 
@@ -29,7 +29,10 @@
                     Start: {{ selectedEvent.start }}<br />
                     End: {{ selectedEvent.end }}
                 </p>
-                <div class="mt-4 text-right">
+                <div class="mt-4 flex justify-end space-x-2">
+                    <button @click="deleteEvent" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                        Delete
+                    </button>
                     <button @click="closeModal" class="px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark">
                         Close
                     </button>
@@ -91,8 +94,14 @@ const newEvent = ref({
     time: '',
 });
 
+const goBack = () => {
+    const itemId = route.params.id;
+    router.push(`/item/${itemId}`);
+};
+
 const openModal = (event: any) => {
     selectedEvent.value = {
+        id: event.id,
         title: event.title,
         description: event.extendedProps.description || 'No description',
         start: event.startStr,
@@ -105,16 +114,29 @@ const closeModal = () => {
     showModal.value = false;
 };
 
-const goBack = () => {
+const deleteEvent = async () => {
     const itemId = route.params.id;
-    router.push(`/item/${itemId}`);
+    const userId = sessionStorage.getItem('userId');
+    const token = sessionStorage.getItem('token');
+
+    try {
+        await axios.delete(`/api/item/calendar/${itemId}/${selectedEvent.value.id}`, {
+            data: { userId, token }
+        });
+
+        events.value = events.value.filter(event => event.id !== selectedEvent.value.id);
+        showModal.value = false;
+    } catch (err) {
+        console.error('Failed to delete event:', err);
+        alert('Failed to delete event.');
+    }
 };
 
 const submitNewEvent = async () => {
     if (!newEvent.value.title || !newEvent.value.time) return;
 
     const start = new Date(newEvent.value.time);
-    const end = new Date(start.getTime() + 60 * 60 * 1000);
+    const end = new Date(start.getTime() + 60 * 1000);
 
     const itemId = route.params.id;
     const userId = sessionStorage.getItem('userId');
@@ -175,7 +197,7 @@ onMounted(async () => {
 
         events.value = res.data.events.map((event: any) => {
             const start = new Date(event.time);
-            const end = new Date(start.getTime() + 60 * 60 * 1000);
+            const end = new Date(start.getTime() + 60 * 1000);
 
             return {
                 id: event.id,
