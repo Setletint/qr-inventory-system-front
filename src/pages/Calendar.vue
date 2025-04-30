@@ -6,7 +6,25 @@
             No events found for this item.
         </div>
 
-        <FullCalendar v-else :options="calendarOptions" class="bg-base-600 border border-2 rounded-lg shadow-xl p-4" />
+        <FullCalendar v-else :options="calendarOptions" class="bg-base-600 border-2 rounded-lg shadow-xl p-4" />
+
+
+        <!-- Modal -->
+        <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center">
+            <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
+                <h2 class="text-xl font-bold mb-2">{{ selectedEvent.title }}</h2>
+                <p class="mb-2">{{ selectedEvent.description }}</p>
+                <p class="text-sm text-gray-500">
+                    Start: {{ selectedEvent.start }}<br />
+                    End: {{ selectedEvent.end }}
+                </p>
+                <div class="mt-4 text-right">
+                    <button @click="closeModal" class="px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -20,11 +38,27 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import type { EventInput } from '@fullcalendar/core';
 
-
 const route = useRoute();
 const router = useRouter();
 const events = ref<EventInput[]>([]);
 const loading = ref(true);
+
+const showModal = ref(false);
+const selectedEvent = ref<any>({});
+
+const openModal = (event: any) => {
+    selectedEvent.value = {
+        title: event.title,
+        description: event.extendedProps.description || 'No description',
+        start: event.startStr,
+        end: event.endStr || 'N/A',
+    };
+    showModal.value = true;
+};
+
+const closeModal = () => {
+    showModal.value = false;
+};
 
 const calendarOptions = ref({
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -36,7 +70,7 @@ const calendarOptions = ref({
     },
     events: events,
     eventClick(info: any) {
-        alert(`Event: ${info.event.title}\nDescription: ${info.event.extendedProps.description}`);
+        openModal(info.event);
     },
     height: 'auto',
 });
@@ -53,21 +87,20 @@ onMounted(async () => {
 
     try {
         const res = await axios.post(`/api/item/getCalendar/${itemId}`, {
-            userId: sessionStorage.getItem('userId'),
-            token: sessionStorage.getItem('token'),
+            userId,
+            token,
         });
 
-        // Ensure proper mapping for FullCalendar format
         events.value = res.data.events.map((event: any) => {
-            const start = new Date(event.time); // Convert the 'time' field to start Date
-            const end = new Date(start.getTime() + 60 * 60 * 1000); // Set end time to 1 hour after start (you can adjust this)
+            const start = new Date(event.time);
+            const end = new Date(start.getTime() + 60 * 60 * 1000);
 
             return {
                 id: event.id,
                 title: event.title || 'Untitled Event',
                 description: event.description || '',
-                start: start.toISOString(), // Convert to ISO string
-                end: end.toISOString(), // Convert to ISO string
+                start: start.toISOString(),
+                end: end.toISOString(),
             };
         });
     } catch (err) {
@@ -77,7 +110,3 @@ onMounted(async () => {
     }
 });
 </script>
-
-<style scoped>
-
-</style>
