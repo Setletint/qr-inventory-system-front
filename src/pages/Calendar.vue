@@ -78,7 +78,7 @@ import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import type { EventInput } from '@fullcalendar/core';
+import type { EventInput, CalendarOptions } from '@fullcalendar/core';
 
 const route = useRoute();
 const router = useRouter();
@@ -167,11 +167,17 @@ const submitNewEvent = async () => {
 const calendarOptions = ref({
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
     initialView: 'dayGridMonth',
+    eventTimeFormat: {
+        hour: 'numeric' as const,
+        minute: '2-digit' as const,
+        meridiem: false,
+    },
     headerToolbar: {
         left: 'prev,next today',
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay',
     },
+    firstDay: 1,
     events: events,
     eventClick(info: any) {
         openModal(info.event);
