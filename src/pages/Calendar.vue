@@ -78,7 +78,7 @@ import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import type { EventInput, CalendarOptions } from '@fullcalendar/core';
+import type { EventInput } from '@fullcalendar/core';
 
 const route = useRoute();
 const router = useRouter();
